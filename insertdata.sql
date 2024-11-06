@@ -8,9 +8,9 @@ select * from Employee;
 
 #insertion of all the categories
 delete from Category;
-call create_category('Succulents', 'A plant with thick fleshy leaves or stems adapted to storing water.');
-call create_category('Flowers', 'The flower part of a plant');
-call create_category('Tropical Plants', 'Plants from a tropical area.');
-call create_category('Aquatic Plants', 'Plants that grow in water.');
-
+call insert_category('Succulents', 'A plant with thick fleshy leaves or stems adapted to storing water.');
+call insert_category('Flowers', 'The flower part of a plant');
+call insert_category('Tropical Plants', 'Plants from a tropical area.');
+call insert_category('Aquatic Plants', 'Plants that grow in water.');
+#show all the categories
 select * from Category;

@@ -13,7 +13,7 @@ create table Employee(
 	employee_id char(4) primary key,
     username varchar(30),
     email varchar(30),
-    passwrd varchar(30) not null,
+    passwrd varchar(250) not null,
     passwrdUpdated bool
 );
 

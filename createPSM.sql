@@ -1,19 +1,15 @@
 -- 1 create employee 
 delimiter $$
 
-drop procedure if exists create_customer $$
+drop procedure if exists create_employee $$
 
-create procedure create_customer(
-	c_id char(4),
-    user varchar(30),
-    passwrd varchar(250),
-    f_name varchar(30),
-    l_name varchar(30),
-    email varchar(100),
-    address varchar(250)
+create procedure create_employee(
+    emp_id char(4),
+    username varchar(30),
+    email varchar (30)  
 )
 begin
-	insert into employee values(c_id, user, passwrd, f_name, l_name, email, address);
+	insert into Employee values(emp_id, username, email, SHA2('TEMPPASSWORD', 256), false);
 end $$
 
 delimiter ;
@@ -22,13 +18,13 @@ delimiter ;
 -- 2 insert category
 delimiter $$
 
-drop procedure if exists create_category $$
-create procedure create_category(
+drop procedure if exists insert_category $$
+create procedure insert_category(
 	cat_Name varchar(30),
     cat_Desc varchar(200)
 )
 begin
-	insert into category values(cat_Name, catDesc);
+	insert into Category values(cat_Name, cat_Desc);
 end $$
 
 delimiter ;
@@ -78,7 +74,7 @@ delimiter ;
 delimiter $$ 
 
 drop function if exists insert_order$$
-create function insert_orders(
+create function insert_order(
 	c_id char(4), 
 	order_Date date, 
     order_status varchar(250), 

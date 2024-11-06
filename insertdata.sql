@@ -14,3 +14,6 @@ call insert_category('Tropical Plants', 'Plants from a tropical area.');
 call insert_category('Aquatic Plants', 'Plants that grow in water.');
 #show all the categories
 select * from Category;
+
+#insert all the products
+call insert_product('S001', 'Aloe Vera', 'A easy-to-care for succulent with green, spiky leaves, often regarded for the gel its leaves produce', 10.00, 5, 40, false, 'Succulents', NULL );

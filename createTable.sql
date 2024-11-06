@@ -50,7 +50,7 @@ create table Products(
 
 #order table
 create table Orders(
-	order_id char(4) primary key,
+	order_id int primary key,
     c_id char(4) not null,
 	order_Date date not null,
     order_Status varchar(250) not null,
@@ -77,7 +77,7 @@ create table Updates(
 
 #makes table
 create table Makes(
-	order_id char(4) primary key,
+	order_id int primary key,
     c_id char(4),
     foreign key (order_id) references Orders(order_id),
     foreign key (c_id) references Customer(c_id)
@@ -90,13 +90,3 @@ create table In_Cart(
     foreign key (c_id) references Customer(c_id),
     foreign key (product_id) references Products(product_id)
 );    
-
-describe Employee;
-describe Customer;
-describe Category;
-describe Products;
-describe Orders;
-describe Order_Items;
-describe Updates;
-describe Makes;
-describe In_Cart;

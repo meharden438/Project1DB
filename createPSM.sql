@@ -35,9 +35,9 @@ delimiter $$
 drop procedure if exists insert_product $$
 create procedure insert_product(p_ID char(4), name varchar(30),
 descript varchar(250), price numeric(5,2), adv_stock int, act_stock int,
-discont bool, catergory varchar(30), image varchar(25))
+discont bool, catergory varchar(30), image varchar(250))
 begin
-insert into insert_products values (p_ID, name, descirpt, price, adv_stock, act_stock, category, image);
+insert into Products values (p_ID, name, descript, price, adv_stock, act_stock, discont, category, image);
 end $$
 delimiter ;
 

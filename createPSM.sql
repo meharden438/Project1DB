@@ -120,3 +120,76 @@ begin
 end $$
 
 delimiter ;
+
+-- TRIGGERS
+
+-- 1 after insert, insert in product history
+delimiter $$
+
+drop trigger if exists product_import$$
+
+create
+	trigger product_insert
+    after insert on product
+    for each row begin
+		insert into product_history (product_id, action_type)
+        values (NEW.product_id, 'INSERT');
+	end $$
+    
+delimiter ;
+
+-- after update, insert in product history
+delimiter $$
+
+drop trigger if exists product_update$$
+
+create
+	trigger product_update
+    after update on product
+    for each row begin
+		insert into product_history (product_id, action_type)
+        values (NEW.product_id, 'UPDATE');
+	end $$
+
+delimiter ;
+
+-- before update, raise error to reject update if product_id is changed
+delimiter $$
+
+drop trigger if exists edit_error$$
+
+create 
+	trigger edit_error
+    before update on product
+	for each row
+    begin
+		if OLD.product_id <> NEW.product_id then
+			signal sqlstate '45000'
+            set message_text = 'The product ID is not allowed to be changed';
+		end if;
+end $$
+    
+delimiter ;
+    
+-- before delete, raise error to reject delete
+delimiter $$
+
+drop trigger if exists delete_error$$
+
+create 
+	trigger delete_error
+	before delete on product
+    for each row
+	begin
+		signal sqlstate '45000'
+		set message_text = 'cannot delete product';
+end $$
+
+delimiter ;
+
+
+
+
+
+		
+			

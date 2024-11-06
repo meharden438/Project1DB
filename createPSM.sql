@@ -23,7 +23,7 @@ delimiter ;
 delimiter $$
 
 drop procedure if exists create_category $$
-create procedure insert_category(
+create procedure create_category(
 	cat_Name varchar(30),
     cat_Desc varchar(200)
 )
@@ -36,7 +36,7 @@ delimiter ;
 
 -- 3 insert product
 delimiter $$
-drop procedure if exists insert_products $$
+drop procedure if exists insert_product $$
 create procedure insert_product(p_ID char(4), name varchar(30),
 descript varchar(250), price numeric(5,2), adv_stock int, act_stock int,
 discont bool, catergory varchar(30), image varchar(25))

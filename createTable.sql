@@ -8,7 +8,6 @@ drop table if exists Order_Item;
 drop table if exists Updates;
 drop table if exists Makes;
 drop table if exists In_Cart;
-drop table if exists Belongs_To;
 
 #emplyoee table
 create table Employee(
@@ -79,5 +78,18 @@ create table Updates(
 );
 
 
+#makes table
+create table Makes(
+	order_id char(4) primary key,
+    c_id char(4),
+    foreign key (order_id) references Orders(order_id),
+    foreign key (c_id) references Customer(c_id)
+);
 
-    
+#in_cart table
+create table In_Cart(
+	c_id char(4) primary key,
+    prod_id char(4),
+    foreign key (c_id) references Customer(c_id),
+    foreign key (product_id) references Product(proudct_id)
+);    

@@ -1,13 +1,16 @@
-#drop previously exisiting tables
-drop table if exists Employee;
-drop table if exists Product;
-drop table if exists Category;
-drop table if exists Customer;
-drop table if exists Orders;
-drop table if exists Order_Item;
-drop table if exists Updates;
-drop table if exists Makes;
+#drop tables in certain order to avoid dropping foreign keys
 drop table if exists In_Cart;
+drop table if exists Makes;
+drop table if exists Updates;
+drop table if exists Order_Items;
+drop table if exists Orders;
+drop table if exists Products;
+drop tables if exists Employee, Category;
+drop table if exists Customer;
+
+
+
+
 
 #emplyoee table
 create table Employee(
@@ -29,13 +32,13 @@ create table Customer(
 );
 
 #catergory table
-create table Catergory(
+create table Category(
 	cat_Name varchar(30) primary key,
     cat_Desc varchar(200) not null
 );
 
 #product table
-create table Product(
+create table Products(
 	product_id char(4) primary key,
     product_name varchar(30) not null,
     product_desc varchar(250) not null,
@@ -58,13 +61,11 @@ create table Orders(
 );
 
 #order_items table
-create table order_Items(
+create table Order_Items(
 	order_id char(4) primary key,
     product_id char(4),
     quanity int,
-    price numeric(5,2),
-    foreign key (product_id) references Product(product_id),
-    foreign key (price) references Product(price)
+    foreign key (product_id) references Products(product_id)
 );
 
 #update table
@@ -74,9 +75,8 @@ create table Updates(
 	up_Time date not null,
     desc_of_uodate varchar(250),
     foreign key (employee_id) references Employee(employee_id),
-    foreign key (product_id) references Product(product_id)
+    foreign key (product_id) references Products(product_id)
 );
-
 
 #makes table
 create table Makes(
@@ -89,7 +89,17 @@ create table Makes(
 #in_cart table
 create table In_Cart(
 	c_id char(4) primary key,
-    prod_id char(4),
+    product_id char(4),
     foreign key (c_id) references Customer(c_id),
-    foreign key (product_id) references Product(proudct_id)
+    foreign key (product_id) references Products(product_id)
 );    
+
+describe Employee;
+describe Customer;
+describe Category;
+describe Products;
+describe Orders;
+describe Order_Items;
+describe Updates;
+describe Makes;
+describe In_Cart;

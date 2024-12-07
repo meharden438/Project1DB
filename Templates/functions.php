@@ -23,6 +23,23 @@ function makeConnection(){
 
 }
 
+function authenticate($user, $passwd){
+    try{
+        $pdo = makeConnection();
+        $statement = $pdo->prepare("SELECT count(*) FROM Customer where user = :username and passwrd = sha2(:passwd,256)");
+        $statement->bindParam(":username", $user);
+        $statement->bindParam(":passwd", $passwd);
+        $result = $statement->execute();
+        $row=$statement->fetch();
+        $pdo=null;
+        return $row[0];
+    }
+    catch(PDOException $e){
+        print "Error!" . $e->getMessage() . "<br/>";
+        die();
+    }
+}
+
 function makeUser(){
     if (isset($_POST['register'])){
         //establish connection to database
@@ -60,26 +77,34 @@ function makeUser(){
 function showCatagoreies(){
     $pdo = makeConnection();
 
-    $sql = "select cat_name from Category";
+    $sql = "select * from Category";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo"
+        <form method='POST'>
         <label for='categories'>Select Category</label>
         <select name='categories'>
+            <option value='select_category'>Select Category</option>
     ";
     foreach($results as $row){
-        echo "<option value='" . $row ."'>" . $row ."</option>";
+        echo "<option value='" . $row['cat_Name'] ."'>" . $row['cat_Name'] ."</option>";
     }
     
-    echo "</select>";
+    echo"
+        </select>
+        <input type='submit' value='Search' name='search'>
+        </form>
+    ";
 
 }
 
-function listProducts(){
+/*function listProducts(){
+    $pdo = makeConnection();
 
-}
+    if(isset($_POST['Search']))
+}*/
 
 
 

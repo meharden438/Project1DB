@@ -4,12 +4,12 @@ delimiter $$
 drop procedure if exists create_employee $$
 
 create procedure create_employee(
-    emp_id char(4),
     username varchar(30),
     email varchar (30)  
 )
 begin
-	insert into Employee values(emp_id, username, email, SHA2('TEMPPASSWORD', 256), false);
+	insert into Employee (username, email, passwrd, passwrdUpdated) 
+    values (username, email, SHA2('TEMPPASSWORD', 256), false);
 end $$
 
 delimiter ;
@@ -20,6 +20,7 @@ delimiter $$
 
 drop procedure if exists insert_category $$
 create procedure insert_category(
+	
 	cat_Name varchar(30),
     cat_Desc varchar(200)
 )
@@ -33,11 +34,23 @@ delimiter ;
 -- 3 insert product
 delimiter $$
 drop procedure if exists insert_product $$
-create procedure insert_product(p_ID char(4), name varchar(30),
+create procedure insert_product(name varchar(30),
 descript varchar(250), price numeric(5,2), adv_stock int, act_stock int,
-discont bool, catergory varchar(30), image varchar(250))
+discont bool, catergory varchar(30), image varchar(25))
 begin
-insert into Products values (p_ID, name, descript, price, adv_stock, act_stock, discont, category, image);
+insert into Products(product_name, product_desc, price, adv_stock, act_stock, discont, category, image)
+values (name, descript, price, adv_stock, act_stock, discont, category, image);
+end $$
+delimiter ;
+
+
+-- 4 
+delimiter $$
+drop procedure if exists insert_customer $$
+create procedure insert_customer(user varchar(30), passwrd varchar(250), f_name varchar(30), l_name varchar(30), email varchar(100), address varchar(250))
+begin
+insert into Customer(user, passwrd, f_name, l_name, email, address)
+values (user, SHA2(passwrd, 256), f_name, l_name, email, address);
 end $$
 delimiter ;
 
@@ -45,7 +58,7 @@ delimiter ;
 -- 4 update product price
 delimiter $$
 drop procedure if exists update_product_price $$
-create procedure update_product_price(p_id char(4), newPrice numeric(5,2))
+create procedure update_product_price(p_id int, newPrice numeric(5,2))
 begin
 update product set price = newPrice where product_id = p_id;
 end $$
@@ -57,11 +70,11 @@ delimiter $$
 drop procedure if exists restock_product $$
 
 create procedure restock_product(
-	prodct_id char(4),
+	prodct_id int,
     quantity int
 )
 begin
-	insert into product values (product_id, quantity);
+	insert into Products values (product_id, quantity);
 end $$
 
 delimiter ;
@@ -75,7 +88,7 @@ delimiter $$
 
 drop function if exists insert_order$$
 create function insert_order(
-	c_id char(4), 
+	c_id int, 
 	order_Date date, 
     order_status varchar(250), 
     total numeric(10, 2)
@@ -84,7 +97,7 @@ returns int
 begin
 	declare new_order_id int;
     
-	insert into orders(c_id, order_Date, order_status, total)
+	insert into Orders(c_id, order_Date, order_status, total)
 	values (c_id, order_Date, order_status, total);
         
 	set new_order_id = LAST_INSERT_ID();
@@ -100,10 +113,11 @@ delimiter $$
 drop function if exists insert_order_item $$
 
 create function insert_order_item(
-    p_order_id char(4),
+    p_order_id int,
     p_product_id char(4),
-    p_quantity int
-)
+    p_quantity int,
+    p_price numeric(5,2)
+    )
 returns varchar(255)
 begin
     -- Insert the order item into the Order_Items table
@@ -113,10 +127,10 @@ begin
     -- Update the actual stock in the Products table
     update Products
     set act_stock = act_stock - p_quantity
-    where product_id = p_product_id;
+    where Products.product_id = p_product_id;
 
     -- Return a success message
-    return (act_stock);
+    return 'Added to order sucessfully!';
 end $$
 
 delimiter ;
@@ -126,14 +140,16 @@ delimiter ;
 -- 1 after insert, insert in product history
 delimiter $$
 
-drop trigger if exists product_import$$
+drop trigger if exists product_insert$$
 
 create
 	trigger product_insert
-    after insert on product
+    after insert on Products
     for each row begin
-		insert into product_history (product_id, action_type)
-        values (NEW.product_id, 'INSERT');
+		insert into product_history_stock (product_id, update_date, old_stock, new_stock, changes)
+        values (NEW.product_id, current_timestamp(), null, new.act_stock, new.act_stock);
+        insert into product_history_price (product_id, update_date, old_price, new_price, percentage)
+        values (NEW.product_id, current_timestamp(), null, new.price, null);
 	end $$
     
 delimiter ;
@@ -145,10 +161,19 @@ drop trigger if exists product_update$$
 
 create
 	trigger product_update
-    after update on product
+    after update on Products
     for each row begin
-		insert into product_history (product_id, action_type)
-        values (NEW.product_id, 'UPDATE');
+         if old.price <> new.price then
+			insert into product_history_price (product_id, update_date, old_price, new_price, percentage)
+            values (new.product_id, current_timestamp(), old.price, new.price,
+                (case when old.price = 0 then null else (new.price - old.price) / old.price * 100 end));
+		end if;
+        
+        if old.act_stock <> new.act_stock then
+        insert into product_history_stock(product_id, update_date, old_stock, new_stock, changes)
+            values (new.product_id, current_timestamp(), old.act_stock, new.act_stock, new.act_stock - old.act_stock);
+        end if;
+        
 	end $$
 
 delimiter ;
@@ -160,7 +185,7 @@ drop trigger if exists edit_error$$
 
 create 
 	trigger edit_error
-    before update on product
+    before update on Products
 	for each row
     begin
 		if OLD.product_id <> NEW.product_id then
@@ -178,7 +203,7 @@ drop trigger if exists delete_error$$
 
 create 
 	trigger delete_error
-	before delete on product
+	before delete on Products
     for each row
 	begin
 		signal sqlstate '45000'

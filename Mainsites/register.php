@@ -35,7 +35,6 @@ makeUser();
     <form method="POST" action="main.php">
         <input type="submit" value="cancel registration" name="cancel">
     </form>
-    <?php showCatagoreies(); ?>
 </body>
 
 </html>

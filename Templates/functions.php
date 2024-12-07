@@ -60,7 +60,7 @@ function makeUser(){
                     $sql = "insert into Customer(user, passwrd, f_name, l_name, email, address) values(:user, :passwrd, :f_name, :l_name, :email, :address)";
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute(['user' => $username, 'passwrd' => $password, 'f_name' => $firstName, 'l_name' => $lastName, 'email' => $email, 'address' => $address]);
-                    echo"Customer record created successfully";
+                    header("Location: main.php");
                 }catch(PDOException $e){
                     echo "Error: " . $e->getMessage();
                 }
@@ -100,11 +100,13 @@ function showCatagoreies(){
 
 }
 
-/*function listProducts(){
+function listProducts(){
     $pdo = makeConnection();
 
-    if(isset($_POST['Search']))
-}*/
+    if(isset($_POST['Search'])){
+        
+    }
+}
 
 
 

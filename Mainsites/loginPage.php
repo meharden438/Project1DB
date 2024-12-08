@@ -9,12 +9,17 @@
         $password = $_POST["password"];
 
         if(authenticate($_POST["username"], $_POST["password"]) == 1){
-            $_SESSION = $_POST["username"];
-            echo "Login sucessful!";
+            $_SESSION['username'] = $_POST['username'];
+            header("Location: main.php");
         }
         else{
             echo "Login unsucessful! Please try again";
         }
+    }
+
+    //if the register button was clicked
+    if(isset($_POST["Register"])){
+        header("Location: register.php");
     }
 ?>
 
@@ -33,7 +38,10 @@
         <label for="password">Password:</label>
         <input type="password" id=password name="password"/>
 
+        <br>
+
         <input type="submit" name="Login" value="Login">
+        <input type="submit" name="Register" value="Register">
     </form>
 
 

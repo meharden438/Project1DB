@@ -47,7 +47,7 @@ create table Products(
     discont bool,
     category varchar(30),
     image varchar(250),
-    foreign key (category) references Catergory(cat_Name) on delete cascade
+    foreign key (category) references Category(cat_Name) on delete cascade
 );
 
 #order table

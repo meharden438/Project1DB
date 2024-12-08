@@ -57,7 +57,7 @@ function makeUser(){
         if(!empty($username) && !empty($password) && !empty($email)){
             if($password == $passwordAgain){
                 try{
-                    $sql = "insert into Customer(user, passwrd, f_name, l_name, email, address) values(:user, :passwrd, :f_name, :l_name, :email, :address)";
+                    $sql = "call insert_customer(:user, :passwrd, :f_name, :l_name, :email, :address)";
                     $stmt = $pdo->prepare($sql);
                     $stmt->execute(['user' => $username, 'passwrd' => $password, 'f_name' => $firstName, 'l_name' => $lastName, 'email' => $email, 'address' => $address]);
                     header("Location: main.php");
@@ -107,7 +107,6 @@ function listProducts(){
         
     }
 }
-
 
 
 ?>

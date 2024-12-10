@@ -10,11 +10,29 @@
 
         if(authenticate($_POST["username"], $_POST["password"]) == 1){
             $_SESSION['username'] = $_POST['username'];
+<<<<<<< Updated upstream
             header("Location: main.php");
+=======
+            $_SESSION['logged_in'] = true;
+            header("Location: main.php");
+        }
+        elseif(employeeAuthenticate($_POST["username"], $_POST["password"]) == 1){
+            $_SESSION['username'] = $_POST['username'];
+            $_SESSION['logged_in'] = true;
+            header("Location: employeeMain.php");
+>>>>>>> Stashed changes
         }
         else{
             echo "Login unsucessful! Please try again";
+            $_SESSION['logged_in'] = false;
         }
+
+        
+    }
+
+    //if the register button was clicked
+    if(isset($_POST["Register"])){
+        header("Location: register.php");
     }
 
     //if the register button was clicked

@@ -20,6 +20,11 @@
 <body>
     <form method="POST">
         <h1> Welcome, <?php echo htmlspecialchars($username); ?> </h1>
+<<<<<<< Updated upstream
+=======
+        <input type="submit" value="View Orders" name="View">
+        <input type="submit" value="Shopping Cart" name="Shop">
+>>>>>>> Stashed changes
         <input type="submit" value="change password" name="change">
         <input type="submit" value="Logout" name="Logout">
     </form>
@@ -68,4 +73,10 @@ else{
         header("location: loginPage.php");
      }
     }
+<<<<<<< Updated upstream
+=======
+    
+    showCatagoreies();
+    listProducts();
+>>>>>>> Stashed changes
     ?>
